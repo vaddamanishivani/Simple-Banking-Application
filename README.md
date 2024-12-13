@@ -1,122 +1,85 @@
 # simple-banking-application 
-
-import java.util.ArrayList;
 import java.util.Scanner;
-class Account {
-    private String accountNumber;
+
+class BankAccount {
     private String accountHolderName;
     private double balance;
-    public Account(String accountNumber, String accountHolderName) {
-        this.accountNumber = accountNumber;
+
+    public BankAccount(String accountHolderName, double initialBalance) {
         this.accountHolderName = accountHolderName;
-        this.balance = 0.0;
+        this.balance = initialBalance;
     }
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-    public String getAccountHolderName() {
-        return accountHolderName;
-    }
-    public double getBalance() {
-        return balance;
-    }
+
     public void deposit(double amount) {
         if (amount > 0) {
             balance += amount;
-            System.out.println("Deposit successful. New balance: " + balance);
+            System.out.println("Successfully deposited: " + amount);
         } else {
-            System.out.println("Invalid deposit amount.");
+            System.out.println("Deposit amount must be positive.");
         }
     }
+
     public void withdraw(double amount) {
         if (amount > 0 && amount <= balance) {
             balance -= amount;
-            System.out.println("Withdrawal successful. New balance: " + balance);
+            System.out.println("Successfully withdrew: " + amount);
         } else {
-            System.out.println("Invalid withdrawal amount or insufficient balance.");
+            System.out.println("Insufficient balance or invalid amount.");
         }
     }
+
+    public void checkBalance() {
+        System.out.println("Current balance: " + balance);
+    }
+
+    public String getAccountHolderName() {
+        return accountHolderName;
+    }
 }
-public class BankingApplication {
-    private static ArrayList<Account> accounts = new ArrayList<>();
-    private static Scanner scanner = new Scanner(System.in);
+
+public class SimpleBankingApp {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter account holder name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter initial balance: ");
+        double initialBalance = scanner.nextDouble();
+
+        BankAccount account = new BankAccount(name, initialBalance);
+
         while (true) {
-            System.out.println("\nBanking System Menu:");
-            System.out.println("1. Create Account");
-            System.out.println("2. Deposit");
-            System.out.println("3. Withdraw");
-            System.out.println("4. Check Balance");
-            System.out.println("5. Exit");
+            System.out.println("\nBanking Menu:");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Check Balance");
+            System.out.println("4. Exit");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+
             switch (choice) {
                 case 1:
-                    createAccount();
+                    System.out.print("Enter deposit amount: ");
+                    double depositAmount = scanner.nextDouble();
+                    account.deposit(depositAmount);
                     break;
                 case 2:
-                    deposit();
+                    System.out.print("Enter withdrawal amount: ");
+                    double withdrawalAmount = scanner.nextDouble();
+                    account.withdraw(withdrawalAmount);
                     break;
                 case 3:
-                    withdraw();
+                    account.checkBalance();
                     break;
                 case 4:
-                    checkBalance();
-                    break;
-                case 5:
-                    System.out.println("Thank you for using the banking system.");
+                    System.out.println("Thank you for using the banking application. Goodbye!");
+                    scanner.close();
                     return;
                 default:
-                    System.out.println("Invalid option. Please try again.");
+                    System.out.println("Invalid choice. Please try again.");
             }
         }
-    }
-    private static void createAccount() {
-        System.out.print("Enter account number: ");
-        String accountNumber = scanner.nextLine();
-        System.out.print("Enter account holder name: ");
-        String accountHolderName = scanner.nextLine();
-
-        Account newAccount = new Account(accountNumber, accountHolderName);
-        accounts.add(newAccount);
-
-        System.out.println("Account created successfully.");
-    }
-    private static void deposit() {
-        Account account = findAccount();
-        if (account != null) {
-            System.out.print("Enter amount to deposit: ");
-            double amount = scanner.nextDouble();
-            account.deposit(amount);
-            scanner.nextLine(); // Consume newline left-over
-        }
-    }
-    private static void withdraw() {
-        Account account = findAccount();
-        if (account != null) {
-            System.out.print("Enter amount to withdraw: ");
-            double amount = scanner.nextDouble();
-            account.withdraw(amount);
-            scanner.nextLine(); // Consume newline left-over
-        }
-    }
-    private static void checkBalance() {
-        Account account = findAccount();
-        if (account != null) {
-            System.out.println("Account holder name: " + account.getAccountHolderName());
-            System.out.println("Account balance: " + account.getBalance());
-        }
-    }
-    private static Account findAccount() {
-        System.out.print("Enter account number: ");
-        String accountNumber = scanner.nextLine();
-        for (Account account : accounts) {
-            if (account.getAccountNumber().equals(accountNumber)) {
-                return account;
-            }
-        }
-        System.out.println("Account not found.");
-        return null;
     }
 }
+
